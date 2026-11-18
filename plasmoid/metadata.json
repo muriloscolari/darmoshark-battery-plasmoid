@@ -1,0 +1,22 @@
+{
+    "KPlugin": {
+        "Authors": [
+            {
+                "Name": "Murilo Scolari"
+            }
+        ],
+        "Category": "System Information",
+        "Description": "Minimal inline KDE Plasma 6 panel widget showing Darmoshark mouse battery percentage",
+        "Icon": "input-mouse",
+        "Id": "me.muriloscolari.darmoshark",
+        "License": "GPL-2.0-or-later",
+        "Name": "Darmoshark Battery",
+        "ServiceTypes": [
+            "Plasma/Applet"
+        ],
+        "Version": "0.1.0"
+    },
+    "KPackageStructure": "Plasma/Applet",
+    "X-Plasma-API-Minimum-Version": "6.0",
+    "X-Plasma-MainScript": "ui/main.qml"
+}
