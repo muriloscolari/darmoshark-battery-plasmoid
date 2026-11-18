@@ -29,23 +29,34 @@ PlasmoidItem {
             var out = (data["stdout"] || "").trim();
             if (out.length > 0) {
                 var lines = out.split("\n");
-                var firstParts = lines[0].split("|");
-                var val = parseInt((firstParts[0] || "").trim(), 10);
-                var name = (firstParts[1] || "Darmoshark Mouse").trim();
-                if (!isNaN(val) && val >= 0 && val <= 100) {
-                    root.batteryPercent = val;
-                    root.modelName = name;
-                    if (lines.length > 1) {
+                var entries = [];
+                for (var i = 0; i < lines.length; i++) {
+                    var p = lines[i].split("|");
+                    var val = parseInt((p[0] || "").trim(), 10);
+                    var name = (p[1] || "Darmoshark Mouse").trim();
+                    if (!isNaN(val) && val >= 0 && val <= 100) {
+                        entries.push({ val: val, name: name });
+                    }
+                }
+                if (entries.length > 0) {
+                    // Prefer wired USB device when both receiver and cable are plugged in.
+                    var chosen = entries[0];
+                    for (var j = 0; j < entries.length; j++) {
+                        if (entries[j].name.indexOf("(2.4 GHz") === -1) {
+                            chosen = entries[j];
+                            break;
+                        }
+                    }
+                    root.batteryPercent = chosen.val;
+                    root.modelName = chosen.name;
+                    if (entries.length > 1) {
                         var summary = [];
-                        for (var i = 0; i < lines.length; i++) {
-                            var p = lines[i].split("|");
-                            if (p.length >= 2) {
-                                summary.push(p[1].trim() + ": " + p[0].trim() + "%");
-                            }
+                        for (var k = 0; k < entries.length; k++) {
+                            summary.push(entries[k].name + ": " + entries[k].val + "%");
                         }
                         root.detailsText = summary.join("\n");
                     } else {
-                        root.detailsText = "Bateria: " + val + "%";
+                        root.detailsText = "Bateria: " + chosen.val + "%";
                     }
                 } else {
                     root.batteryPercent = -1;
